@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import Footer from './components/Footer'
 import ProductCatalog from './components/ProductCatalog'
+import ChatAssistant from './components/ChatAssistant'
 
 function App() {
   const [recommendation, setRecommendation] = useState(null)
@@ -16,7 +17,7 @@ function App() {
       <Header />
       <main className="flex-1">
         <Hero onCtaClick={scrollToAssistant} />
-        <section id="assistente" aria-label="Assistente virtual de triagem" className="px-6 py-16" />
+        <ChatAssistant onRecommendation={setRecommendation} />
         <ProductCatalog recommendation={recommendation} />
       </main>
       <Footer />
