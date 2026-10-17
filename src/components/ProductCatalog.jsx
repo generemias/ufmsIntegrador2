@@ -14,9 +14,10 @@ function ProductCatalog({ recommendation }) {
     )
   }, [recommendation])
 
-  const visibleProducts = showOnlyRecommended
-    ? PRODUCTS.filter((product) => recommendedIds.has(product.id))
-    : PRODUCTS
+  const visibleProducts =
+    recommendation && showOnlyRecommended
+      ? PRODUCTS.filter((product) => recommendedIds.has(product.id))
+      : PRODUCTS
 
   return (
     <section id="catalogo" aria-label="Catálogo de armações" className="px-6 py-16">
