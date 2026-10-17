@@ -9,8 +9,8 @@ const LANDMARK_INDICES = {
   chinPx: 152,
   rightCheekPx: 234,
   leftCheekPx: 454,
-  rightTemplePx: 127,
-  leftTemplePx: 356,
+  rightTemplePx: 71,
+  leftTemplePx: 301,
   noseRootPx: 6,
   noseTipPx: 1,
   rightEyeInnerPx: 133,
@@ -29,7 +29,13 @@ async function getLandmarker() {
         runningMode: 'IMAGE',
         numFaces: 1,
       })
-    })()
+    })().catch((error) => {
+      // Don't cache a failed load — a later retry (e.g. after the network
+      // recovers) must be able to try again instead of replaying this
+      // same rejection forever.
+      landmarkerPromise = null
+      throw error
+    })
   }
   return landmarkerPromise
 }
