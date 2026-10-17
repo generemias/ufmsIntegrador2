@@ -57,7 +57,6 @@ function ChatAssistant({ onRecommendation }) {
 
   const finishFlow = async (finalPreferences) => {
     setIsLoading(true)
-    appendMessage('ai', 'IA está analisando suas respostas...')
     const result = await getRecommendation(finalPreferences)
     setIsLoading(false)
     appendMessage('ai', result.message)
@@ -125,9 +124,23 @@ function ChatAssistant({ onRecommendation }) {
                     : 'self-end bg-indigo-600 text-white'
                 }`}
               >
+                <span className="sr-only">{m.role === 'ai' ? 'IA: ' : 'Você: '}</span>
                 {m.text}
               </li>
             ))}
+            {isLoading && (
+              <li
+                aria-label="IA está analisando suas respostas"
+                className="self-start rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-500"
+              >
+                <span className="sr-only">IA está analisando suas respostas</span>
+                <span aria-hidden="true" className="inline-flex gap-1">
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.3s]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]" />
+                  <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" />
+                </span>
+              </li>
+            )}
           </ul>
 
           {!isDone && (

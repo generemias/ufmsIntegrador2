@@ -11,8 +11,7 @@ sobre receita/grau, e recomenda armações do catálogo da loja com base nessas 
   Next.js, que não é necessária aqui já que a aplicação não tem rotas de servidor nem requisitos
   de SEO.
 - **Tailwind CSS** (v4) — estilização utilitária responsiva, mobile-first.
-- **lucide-react** — ícones de interface.
-- **SVG inline** — ilustrações dos tipos de armação no catálogo, sem depender de imagens externas.
+- **SVG inline** — ícones de interface e ilustrações dos tipos de armação no catálogo, sem depender de imagens externas.
 
 A "IA" é simulada por um módulo local de regras determinísticas
 (`src/services/recommendationService.js`), com um delay assíncrono (800–1500ms) que imita uma

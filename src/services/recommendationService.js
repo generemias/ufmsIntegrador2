@@ -2,6 +2,7 @@
  * @typedef {{
  *   faceShape: 'oval'|'redondo'|'quadrado'|'coracao',
  *   lifestyle: string,
+ *   prescription: string,
  * }} Preferences
  *
  * @typedef {{
@@ -23,7 +24,7 @@ const FRAME_TYPES_BY_FACE_SHAPE = {
  * @param {Preferences} preferences
  * @returns {Recommendation}
  */
-export function buildRecommendation({ faceShape, lifestyle }) {
+export function buildRecommendation({ faceShape, lifestyle, prescription }) {
   const recommendedFrameTypes = FRAME_TYPES_BY_FACE_SHAPE[faceShape] ?? []
   const frameList = recommendedFrameTypes.join(', ')
 
@@ -32,6 +33,11 @@ export function buildRecommendation({ faceShape, lifestyle }) {
     message += ' Priorizamos opções leves e resistentes para o seu estilo de vida ativo.'
   } else if (lifestyle) {
     message += ` Levamos em conta também o seu estilo de vida: ${lifestyle}.`
+  }
+  if (prescription === 'sim') {
+    message += ' Como você usa grau, nossa equipe pode preparar as lentes com sua receita nessas armações.'
+  } else if (prescription && prescription !== 'nao') {
+    message += ` Também anotamos sua resposta sobre receita: "${prescription}".`
   }
 
   return { faceShape, lifestyle, recommendedFrameTypes, message }
