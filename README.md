@@ -2,8 +2,9 @@
 
 Aplicação web desenvolvida como parte do **Projeto Integrador / Ação de Extensão UFMS Digital**,
 que simula o uso de Inteligência Artificial para realizar a triagem inicial de clientes de um
-comércio ótico local: o assistente virtual coleta formato de rosto, estilo de vida e informações
-sobre receita/grau, e recomenda armações do catálogo da loja com base nessas respostas.
+comércio ótico local: o assistente virtual coleta formato de rosto (manualmente ou via escaneamento
+por câmera), estilo de vida e informações sobre receita/grau, e recomenda armações do catálogo da
+loja com base nessas respostas.
 
 ## Tecnologias Utilizadas
 
@@ -47,6 +48,17 @@ de recomendação mapeiam formato de rosto para tipos de armação prioritários
 armações quadradas/retangulares; rosto oval → aviador, quadrada e retangular), e o estilo de vida
 informado pelo usuário é incorporado à mensagem de resposta da IA. Essa abordagem evita custos e
 dependência de uma chave de API externa, mantendo a demonstração 100% funcional offline.
+
+**Captura e análise facial por câmera:** além de responder manualmente, o usuário pode usar a
+câmera do dispositivo (`CameraCapture.jsx`) para "escanear" o rosto — a aplicação solicita
+permissão via `getUserMedia`, exibe o feed de vídeo em tempo real e, ao capturar a foto, desenha o
+frame num `<canvas>` oculto para gerar uma imagem estática e liberar a câmera imediatamente. A
+análise de formato de rosto (`analyzeFaceFromImage`) é simulada no navegador — nenhuma imagem é
+enviada a servidores externos — com um delay de 1,5s e um resultado determinístico por foto
+(a mesma imagem sempre gera o mesmo formato detectado), que se integra automaticamente ao fluxo de
+recomendação já existente. Caso o navegador não suporte câmera ou a permissão seja negada, a
+aplicação exibe uma mensagem amigável e mantém as opções manuais do chat sempre disponíveis como
+alternativa.
 
 ## Autoria
 

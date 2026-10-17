@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { getRecommendation } from '../services/recommendationService'
+import CameraCapture from './CameraCapture'
 
 const STEPS = [
   {
@@ -47,6 +48,7 @@ function ChatAssistant({ onRecommendation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [hint, setHint] = useState('')
+  const [cameraResetKey, setCameraResetKey] = useState(0)
 
   const isDone = step >= STEPS.length
   const currentStep = !isDone ? STEPS[step] : null
@@ -106,6 +108,7 @@ function ChatAssistant({ onRecommendation }) {
     setPreferences({})
     setHint('')
     setInputValue('')
+    setCameraResetKey((prev) => prev + 1)
     onRecommendation(null)
   }
 
@@ -142,6 +145,16 @@ function ChatAssistant({ onRecommendation }) {
               </li>
             )}
           </ul>
+
+          {!isDone && currentStep.key === 'faceShape' && (
+            <div className="mt-4">
+              <CameraCapture
+                key={cameraResetKey}
+                options={currentStep.options}
+                onDetected={(value, displayText) => handleAnswer(currentStep.key, value, displayText)}
+              />
+            </div>
+          )}
 
           {!isDone && (
             <div className="mt-4 flex flex-wrap gap-2">

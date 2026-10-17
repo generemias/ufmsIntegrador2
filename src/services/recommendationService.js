@@ -20,6 +20,15 @@ const FRAME_TYPES_BY_FACE_SHAPE = {
   coracao: ['redonda', 'gatinho'],
 }
 
+const FACE_SHAPE_LABELS = {
+  oval: 'oval',
+  redondo: 'redondo',
+  quadrado: 'quadrado',
+  coracao: 'coração',
+}
+
+const DETECTABLE_FACE_SHAPES = Object.keys(FACE_SHAPE_LABELS)
+
 /**
  * @param {Preferences} preferences
  * @returns {Recommendation}
@@ -51,5 +60,31 @@ export function getRecommendation(preferences) {
   const delay = 800 + Math.random() * 700
   return new Promise((resolve) => {
     setTimeout(() => resolve(buildRecommendation(preferences)), delay)
+  })
+}
+
+/**
+ * Simulates AI-based face-shape detection from a captured photo. Deterministic
+ * per image (same photo always yields the same shape) so retaking the photo
+ * with a different frame produces a different reading.
+ * @param {string} imageDataUrl
+ * @returns {Promise<{ faceShape: 'oval'|'redondo'|'quadrado'|'coracao', message: string }>}
+ */
+export function analyzeFaceFromImage(imageDataUrl) {
+  let checksum = 0
+  const stride = Math.max(1, Math.floor(imageDataUrl.length / 500))
+  for (let i = 0; i < imageDataUrl.length; i += stride) {
+    checksum = (checksum + imageDataUrl.charCodeAt(i)) % 997
+  }
+  const faceShape = DETECTABLE_FACE_SHAPES[checksum % DETECTABLE_FACE_SHAPES.length]
+  const label = FACE_SHAPE_LABELS[faceShape]
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        faceShape,
+        message: `Analisamos as proporções do seu rosto na foto e detectamos o formato ${label}.`,
+      })
+    }, 1500)
   })
 }
