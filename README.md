@@ -13,6 +13,7 @@ loja com base nessas respostas.
   de SEO.
 - **Tailwind CSS** (v4) — estilização utilitária responsiva, mobile-first.
 - **SVG inline** — ícones de interface e ilustrações dos tipos de armação no catálogo, sem depender de imagens externas.
+- **MediaPipe Face Landmarker** (`@mediapipe/tasks-vision`) e **OpenCV.js** (`@techstark/opencv-js`) — usados apenas no modo "Scan Completo" da câmera, carregados sob demanda, para extrair medidas faciais reais a partir da foto capturada.
 
 A "IA" é simulada por um módulo local de regras determinísticas
 (`src/services/recommendationService.js`), com um delay assíncrono (800–1500ms) que imita uma
@@ -59,6 +60,20 @@ enviada a servidores externos — com um delay de 1,5s e um resultado determiní
 recomendação já existente. Caso o navegador não suporte câmera ou a permissão seja negada, a
 aplicação exibe uma mensagem amigável e mantém as opções manuais do chat sempre disponíveis como
 alternativa.
+
+**Scan Completo — medidas faciais reais via câmera:** além do "Scan Rápido" (simulado), o usuário
+pode escolher o "Scan Completo", que segura um cartão de referência (crédito, débito ou RG —
+padrão ISO/IEC 7810 ID-1, 85,6mm de largura) ao lado do rosto na foto para calibrar a escala da
+imagem. A partir daí, o **MediaPipe Face Landmarker** detecta os pontos faciais (incluindo a íris,
+para a distância pupilar) e o **OpenCV.js** localiza automaticamente o contorno do cartão por
+detecção de bordas/contornos, calculando a razão pixels-por-milímetro. Com essa calibração, a
+aplicação extrai medidas reais em milímetros (distância pupilar, largura e altura do rosto,
+distância entre as têmporas, comprimento do nariz e largura da ponte nasal) e classifica o formato
+do rosto a partir das proporções reais — tudo rodando inteiramente no navegador (bibliotecas
+carregadas sob demanda via `import()` dinâmico), sem que nenhuma imagem ou medida saia do
+dispositivo. Caso o cartão ou o rosto não sejam identificados com confiança suficiente, a
+aplicação nunca exibe uma medida "inventada": mostra uma mensagem de erro clara e permite nova
+tentativa, mantendo o "Scan Rápido" sempre disponível como alternativa mais leve.
 
 ## Autoria
 
