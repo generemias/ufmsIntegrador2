@@ -21,6 +21,15 @@ function CameraCapture({ options, onDetected }) {
 
   useEffect(() => stopStream, [])
 
+  // The <video> element only exists in the DOM once `phase` becomes
+  // 'streaming', so the srcObject must be assigned after that render
+  // commits, not synchronously in the click handler.
+  useEffect(() => {
+    if (phase === 'streaming' && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current
+    }
+  }, [phase])
+
   const startCamera = async () => {
     setErrorMessage('')
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -34,9 +43,6 @@ function CameraCapture({ options, onDetected }) {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true })
       streamRef.current = stream
       setPhase('streaming')
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-      }
     } catch {
       setErrorMessage(
         'Não foi possível acessar a câmera (permissão negada ou nenhuma câmera encontrada). Use as opções manuais abaixo.',
